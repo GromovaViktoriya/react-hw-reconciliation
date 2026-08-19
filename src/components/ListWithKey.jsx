@@ -21,7 +21,7 @@ export const ListWithKey = ({error, setError, onChangeHandler, shuffleElements, 
 
     const addToStartOfTheList = () => {
         if (inputValue !== "") {
-            setArray([{item: inputValue, id: crypto.randomUUID + array.length}, ...array]);
+            setArray([{item: inputValue, id: crypto.randomUUID()}, ...array]);
         } else {
             setError('Значение не может быть пустым')
         }
