@@ -1,122 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import {ListWithoutKey} from "./components/ListWithoutKey.jsx";
+import {ListWithKey} from "./components/ListWithKey.jsx";
+import {useState} from "react";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [listName, setListName] = useState("ListWithKey");
+    const [error, setError] = useState(null)
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
+    const onClickHandler = (event) => {
+        event.target.name === 'withKeys' ? setListName('ListWithKey') : setListName('ListWithoutKey');
+    }
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+    const onChangeHandler = (event, setInputValue) => {
+        setError(null)
+        setInputValue(event.target.value)
+    }
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    const deleteFirstElement = (array, setArray) => {
+        setArray(array.filter((element, index) => index !== 0))
+    }
+
+    const shuffleElements = (array, setArray) => {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        setArray(newArray);
+    }
+
+    return (
+        <div className="App">
+            <div onClick={onClickHandler} className="switch">
+                <button name='withKeys' className={listName === "ListWithKey" ? 'active' : ''}>Список с ключами</button>
+                <button name='withoutKeys' className={listName === "ListWithoutKey" ? 'active' : ''}>Список без ключей
+                </button>
+            </div>
+            {listName === "ListWithKey"
+                ? <ListWithKey error={error} setError={setError}
+                               onChangeHandler={(event, setInputValue) => onChangeHandler(event, setInputValue)}
+                               deleteFirstElement={(array, setArray) => deleteFirstElement(array, setArray)}
+                               shuffleElements={(array, setArray) => shuffleElements(array, setArray)}
+                />
+                : <ListWithoutKey error={error}
+                                  setError={setError}
+                                  onChangeHandler={(event, setInputValue) => onChangeHandler(event, setInputValue)}
+                                  deleteFirstElement={(array, setArray) => deleteFirstElement(array, setArray)}
+                                  shuffleElements={(array, setArray) => shuffleElements(array, setArray)}
+                />}
+
+        </div>
+    )
 }
 
 export default App
